@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login | PHINMA UI Smart Parking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+                
+        footer {
+            background-color: #002a3b;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+             /* NAVBAR CONTAINER */
+        nav {
+            background-color: #004b6b;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* LOGO */
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* MENU LIST */
+        nav ul {
+            list-style: none;
+            /* ❌ remove bullets */
+            display: flex;
+            /* ✅ horizontal */
+            gap: 25px;
+            padding: 0;
+        }
+
+        /* MENU LINKS */
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+
+         * {
+            margin: 0;
+            padding: 0;
+        }
+        /* Reuse hero layout */
+        .hero {
+            flex: 1;
+            min-height: 75vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 40px;
+        }
+
+        /* Login Form Card */
+        .login-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #004b6b;
+        }
+
+        .login-card label {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .login-card button {
+            width: 100%;
+            background-color: #ffcc00;
+            color: black;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-card button:hover {
+            background-color: #e6b800;
+        }
+
+        .login-card p {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .login-card a {
+            color: #004b6b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Website</div>
+        <ul>
+            <li><a href="register.html">Register</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero / Login Section -->
+    <header class="hero">
+        <div class="login-card">
+            <h2>Login</h2>
+
+            <form>
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+
+                <button type="submit"><a href="{{url_for('dashboard')}}">Login</a></button>
+            </form>
+
+            <p>Don’t have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+        </div>
+    </header>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 PHINMA UI Smart Parking System</p>
+    </footer>
+
+</body>
+
+</html>

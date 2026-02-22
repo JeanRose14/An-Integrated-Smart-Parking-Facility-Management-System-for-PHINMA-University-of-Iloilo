@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PHINMA UI Smart Parking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            flex: 1;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            padding: 60px 40px;
+        }
+
+        .hero-content {
+            color: white;
+            max-width: 600px;
+
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            margin-bottom: 20px;
+        }
+
+        /* Button */
+        .btn {
+            background-color: #ffcc00;
+            color: black;
+            padding: 10px 22px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #e6b800;
+        }
+
+        /* NAVBAR CONTAINER */
+        nav {
+            background-color: #004b6b;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* LOGO */
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* MENU LIST */
+        nav ul {
+            list-style: none;
+            /* ❌ remove bullets */
+            display: flex;
+            /* ✅ horizontal */
+            gap: 25px;
+            padding: 0;
+        }
+
+        /* MENU LINKS */
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+
+        footer {
+            background-color: #002a3b;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .btn-get-started {
+            display: inline-block;
+            background-color: #ffcc00;
+            color: black;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-get-started:hover {
+            background-color: #e6b800;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">Website</div>
+        <ul>
+            <li><a href="#">Register</a></li>
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </nav>
+
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>PHINMA UI<br>Smart Parking<br>Portal</h1>
+            <p>Manage parking easily and efficiently</p>
+            <a href="{{ url_for('register') }}" class="btn-get-started">Get Started</a>
+        </div>
+    </header>
+
+    <footer>
+        <p>© 2026 PHINMA UI Smart Parking System</p>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html> 
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register | PHINMA UI Smart Parking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .hero {
+            flex: 1;
+            min-height: 75vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 40px;
+        }
+
+        .register-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .register-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #004b6b;
+        }
+
+        .register-card label {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .register-card input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .register-card button {
+            width: 100%;
+            background-color: #ffcc00;
+            color: black;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .register-card button:hover {
+            background-color: #e6b800;
+        }
+
+        .register-card p {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .register-card a {
+            color: #004b6b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: #002a3b;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+             /* NAVBAR CONTAINER */
+        nav {
+            background-color: #004b6b;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* LOGO */
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* MENU LIST */
+        nav ul {
+            list-style: none;
+            /* ❌ remove bullets */
+            display: flex;
+            /* ✅ horizontal */
+            gap: 25px;
+            padding: 0;
+        }
+
+        /* MENU LINKS */
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+
+         * {
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Website</div>
+        <ul>
+            <!-- ✅ use url_for -->
+            <li><a href="{{ url_for('register') }}">Register</a></li>
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero / Register Section -->
+    <header class="hero">
+        <div class="register-card">
+            <h2>Create Account</h2>
+
+            <!-- ✅ Flask POST -->
+            <form method="POST" action="{{ url_for('register') }}">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="full_name" placeholder="Enter your full name" required>
+
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+                <label for="vehicle">Vehicle Plate No.</label>
+                <input type="text" id="vehicle" name="vehicle_plate_number" placeholder="ABC-1234" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create password" required>
+
+                <!-- ✅ FIX: remove <a> inside button -->
+                <button type="submit">Register</button>
+            </form>
+
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+        </div>
+    </header>
+
+    <footer>
+        <p>© 2026 PHINMA UI Smart Parking System</p>
+    </footer>
+
+</body>
+</html>
