@@ -1,5 +1,6 @@
-from flask import render_template, request, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash
 from models.models import *
+from flask_mysqldb import MySQL
 
 def app_routes(app, mysql):
 

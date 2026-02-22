@@ -36,10 +36,11 @@ def login():
 
             cur = mysql.connection.cursor()
             cur.execute(
-                "SELECT * FROM users WHERE email=%s AND password=%s",
+                "SELECT * FROM registered WHERE email=%s AND password=%s",
                 (email, password)
             )
             user = cur.fetchone()
+            print("USER FOUND:", user)
             cur.close()
 
             if user:
@@ -72,7 +73,7 @@ def register():
             # save to database
             cur = mysql.connection.cursor()
             cur.execute("""
-                INSERT INTO users (full_name, email, vehicle_plate_number, password)
+                INSERT INTO registered (full_name, email, vehicle_plate_number, password)
                 VALUES (%s, %s, %s, %s)
             """, (full_name, email, plate, password))
             mysql.connection.commit()

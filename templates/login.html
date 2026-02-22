@@ -59,7 +59,7 @@
         /* Reuse hero layout */
         .hero {
             flex: 1;
-            min-height: 75vh;
+            min-height: 64vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -132,8 +132,6 @@
     <nav>
         <div class="logo">Website</div>
         <ul>
-            <li><a href="register.html">Register</a></li>
-            <li><a href="login.html">Login</a></li>
             <li><a href="#">Help</a></li>
             <li><a href="#">About</a></li>
         </ul>
@@ -144,14 +142,14 @@
         <div class="login-card">
             <h2>Login</h2>
 
-            <form>
+            <form method="POST" action="{{ url_for('login') }}">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" placeholder="Enter your email" required>
+                <input type="email" name="email" id="email" placeholder="Enter your email" required>
 
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
+                <input type="password" name="password" id="password" placeholder="Enter your password" required>
 
-                <button type="submit"><a href="{{url_for('dashboard')}}">Login</a></button>
+                <button type="submit">Login</button>
             </form>
 
             <p>Don’t have an account? <a href="{{ url_for('register') }}">Register here</a></p>

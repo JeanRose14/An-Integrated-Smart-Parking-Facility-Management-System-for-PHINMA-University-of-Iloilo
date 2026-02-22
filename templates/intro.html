@@ -12,11 +12,13 @@
         }
 
         .hero {
-            flex: 1;
-            min-height: 60vh;
+           flex: 1;
+            min-height: 64vh;
             display: flex;
-            align-items: center;
-            padding: 60px 40px;
+            justify-content: center;  /* ✅ horizontal center */
+            align-items: center;      /* ✅ vertical center */
+            text-align: center;       /* ✅ center text */
+            padding: 60px 20px;
         }
 
         .hero-content {
@@ -115,8 +117,6 @@
     <nav>
         <div class="logo">Website</div>
         <ul>
-            <li><a href="#">Register</a></li>
-            <li><a href="#">Login</a></li>
             <li><a href="#">Help</a></li>
             <li><a href="#">About</a></li>
         </ul>
@@ -125,7 +125,7 @@
 
     <header class="hero">
         <div class="hero-content">
-            <h1>PHINMA UI<br>Smart Parking<br>Portal</h1>
+            <h1>PHINMA UI<br>Smart Parking Portal<br></h1>
             <p>Manage parking easily and efficiently</p>
             <a href="{{ url_for('register') }}" class="btn-get-started">Get Started</a>
         </div>

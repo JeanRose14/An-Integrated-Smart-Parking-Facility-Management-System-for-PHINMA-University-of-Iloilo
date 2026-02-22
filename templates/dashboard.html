@@ -10,7 +10,7 @@
     /* Hero layout reused */
     .hero {
       flex: 1;
-      min-height: 75vh;
+      min-height: 64vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -23,7 +23,7 @@
       padding: 30px;
       border-radius: 10px;
       width: 100%;
-      max-width: 700px;
+      max-width: 900px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
@@ -32,10 +32,14 @@
       margin-bottom: 20px;
     }
 
+    .dashboard-card p {
+      margin-bottom: 15px;
+    }
+
     /* Stats */
     .stats {
       display: flex;
-      gap: 20px;
+      gap: 10px;
       margin-bottom: 30px;
     }
 
@@ -43,13 +47,13 @@
       flex: 1;
       background-color: #004b6b;
       color: white;
-      padding: 20px;
+      padding: 22px;
       border-radius: 8px;
       text-align: center;
     }
 
     .stat-box h3 {
-      font-size: 28px;
+      font-size: 25px;
       margin-bottom: 5px;
     }
 
@@ -135,7 +139,6 @@
   <nav>
     <div class="logo">Website</div>
     <ul>
-      <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="#">Parking</a></li>
       <li><a href="#">Profile</a></li>
       <li><a href="index.html">Logout</a></li>
@@ -150,20 +153,28 @@
 
       <div class="stats">
         <div class="stat-box">
-          <h3>12</h3>
+          <h3>4</h3>
           <p>Available Slots</p>
         </div>
         <div class="stat-box">
-          <h3>8</h3>
+          <h3>6</h3>
           <p>Occupied Slots</p>
         </div>
         <div class="stat-box">
-          <h3>20</h3>
+          <h3>10</h3>
           <p>Total Slots</p>
         </div>
         <div class="stat-box">
-          <h3>2:45 PM</h3>
-          <p>Time Scanned</p>
+          <h3>8:00 AM</h3>
+          <p>Time Scanned In</p>
+        </div>
+        <div class="stat-box">
+          <h3>4:00 PM</h3>
+          <p>Time Scanned Out</p>
+        </div>
+        <div class="stat-box">
+          <h3>8 Hours</h3>
+          <p>Parking Duration</p>
         </div>
       </div>
 
