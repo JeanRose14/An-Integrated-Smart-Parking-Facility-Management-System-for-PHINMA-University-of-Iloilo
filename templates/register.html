@@ -6,6 +6,19 @@
     <title>Register | PHINMA UI Smart Parking</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* ⭐ fixes uneven margins */
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
         .hero {
             flex: 1;
             min-height: 64vh;
