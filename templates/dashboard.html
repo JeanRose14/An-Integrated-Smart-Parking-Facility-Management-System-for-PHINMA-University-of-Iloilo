@@ -182,6 +182,26 @@ footer{
 </style>
 </head>
 
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+<script>
+const socket = io();
+
+socket.on('connect', () => {
+  console.log("WebSocket connected");
+});
+
+socket.on('parking_update', (data) => {
+  console.log("LIVE UPDATE:", data);
+
+  document.getElementById("availableSlots").innerText = data.available;
+  document.getElementById("occupiedSlots").innerText = data.occupied;
+  document.getElementById("totalSlots").innerText = data.total;
+
+  const percent = (data.occupied / data.total) * 100;
+  document.getElementById("progressFill").style.width = percent + "%";
+});
+</script>
+
 <body>
 
 <!-- HEADER (UNCHANGED) -->

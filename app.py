@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_mysqldb import MySQL
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
 app.secret_key = "secretkey"
 
 # MySQL config
@@ -108,6 +110,27 @@ def update_parking():
     latest_parking["available"] = data["available"]
     latest_parking["total"] = data["total"]
 
+    occupied = data["total"] - data["available"]
+
+    # ✅ SAVE TO DATABASE (optional but defense strong)
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            INSERT INTO parking_logs (available_slots, occupied_slots, total_slots)
+            VALUES (%s, %s, %s)
+        """, (data["available"], occupied, data["total"]))
+        mysql.connection.commit()
+        cur.close()
+    except Exception as e:
+        print("DB log error:", e)
+
+    # 🚀🔥 PUSH TO FRONTEND (THE MAGIC)
+    socketio.emit('parking_update', {
+        "available": data["available"],
+        "occupied": occupied,
+        "total": data["total"]
+    })
+
     return {"status": "ok"}
 
 # ================= GET PARKING STATUS (API FOR DASHBOARD) =================
@@ -123,4 +146,4 @@ def parking_status():
 
 # ================= RUN =================
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
