@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
@@ -12,6 +12,10 @@ app.config['MYSQL_DB'] = 'smart_parking'
 
 mysql = MySQL(app)
 
+latest_parking = {
+    "available": 10,
+    "total": 10
+}
 
 # ================= LANDING =================
 @app.route('/')
@@ -96,6 +100,26 @@ def register():
 def dashboard():
     return render_template('dashboard.html')
 
+# ================= UPDATE PARKING (API) =================
+@app.route('/update-parking', methods=['POST'])
+def update_parking():
+    data = request.get_json()
+
+    latest_parking["available"] = data["available"]
+    latest_parking["total"] = data["total"]
+
+    return {"status": "ok"}
+
+# ================= GET PARKING STATUS (API FOR DASHBOARD) =================
+@app.route('/api/parking-status')
+def parking_status():
+    occupied = latest_parking["total"] - latest_parking["available"]
+
+    return jsonify({
+        "available": latest_parking["available"],
+        "occupied": occupied,
+        "total": latest_parking["total"]
+    })
 
 # ================= RUN =================
 if __name__ == '__main__':
