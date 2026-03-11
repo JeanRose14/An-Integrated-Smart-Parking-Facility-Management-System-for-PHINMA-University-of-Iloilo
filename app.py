@@ -1,25 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_mysqldb import MySQL
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
+
 app.secret_key = "secretkey"
 
-# MySQL config
+# ================= MYSQL CONFIG =================
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'smart_parking'
+app.config['MYSQL_PASSWORD'] = 'Rose@1406'
+app.config['MYSQL_DB'] = 'pk_db'
+app.config['MYSQL_PORT'] = 3306
 
 mysql = MySQL(app)
 
+# ================= PARKING DATA =================
 latest_parking = {
     "available": 10,
     "total": 10
 }
 
-# ================= LANDING =================
+# ================= LANDING PAGE =================
 @app.route('/')
 def landing_page():
     return render_template('intro.html')
@@ -29,7 +33,8 @@ def landing_page():
 def intro():
     return render_template('intro.html')
 
-    # ================= LOGIN =================
+
+# ================= LOGIN =================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -42,21 +47,20 @@ def login():
 
             cur = mysql.connection.cursor()
             cur.execute(
-                "SELECT * FROM registered WHERE email=%s AND password=%s",
-                (email, password)
+                "SELECT password FROM registered WHERE email=%s",
+                (email,)
             )
             user = cur.fetchone()
-            print("USER FOUND:", user)
             cur.close()
 
-            if user:
+            if user and check_password_hash(user[0], password):
                 flash("Login successful!", "success")
                 return redirect(url_for('dashboard'))
             else:
                 flash("Invalid email or password.", "danger")
 
         except Exception as e:
-            print(f"Login Error: {e}")
+            print("Login Error:", e)
             flash("Login failed.", "danger")
 
     return render_template('login.html')
@@ -72,26 +76,25 @@ def register():
             plate = request.form.get('vehicle_plate_number')
             password = request.form.get('password')
 
-            # clean email
             if email:
                 email = email.lower().strip()
 
-            # save to database
+            hashed_password = generate_password_hash(password)
+
             cur = mysql.connection.cursor()
             cur.execute("""
                 INSERT INTO registered (full_name, email, vehicle_plate_number, password)
                 VALUES (%s, %s, %s, %s)
-            """, (full_name, email, plate, password))
+            """, (full_name, email, plate, hashed_password))
+
             mysql.connection.commit()
             cur.close()
 
             flash("Registered successfully!", "success")
-
-            # ✅ FIX: redirect to dashboard after register
             return redirect(url_for('dashboard'))
 
         except Exception as e:
-            print(f"Error: {e}")
+            print("Register Error:", e)
             flash("Registration failed.", "danger")
 
     return render_template('register.html')
@@ -102,7 +105,8 @@ def register():
 def dashboard():
     return render_template('dashboard.html')
 
-# ================= UPDATE PARKING (API) =================
+
+# ================= UPDATE PARKING =================
 @app.route('/update-parking', methods=['POST'])
 def update_parking():
     data = request.get_json()
@@ -112,19 +116,20 @@ def update_parking():
 
     occupied = data["total"] - data["available"]
 
-    # ✅ SAVE TO DATABASE (optional but defense strong)
     try:
         cur = mysql.connection.cursor()
         cur.execute("""
             INSERT INTO parking_logs (available_slots, occupied_slots, total_slots)
             VALUES (%s, %s, %s)
         """, (data["available"], occupied, data["total"]))
+
         mysql.connection.commit()
         cur.close()
-    except Exception as e:
-        print("DB log error:", e)
 
-    # 🚀🔥 PUSH TO FRONTEND (THE MAGIC)
+    except Exception as e:
+        print("Database log error:", e)
+
+    # Send real-time update to frontend
     socketio.emit('parking_update', {
         "available": data["available"],
         "occupied": occupied,
@@ -133,7 +138,14 @@ def update_parking():
 
     return {"status": "ok"}
 
-# ================= GET PARKING STATUS (API FOR DASHBOARD) =================
+
+# ================= LOGOUT =================
+@app.route('/logout')
+def logout():
+    return redirect(url_for('intro'))
+
+
+# ================= API PARKING STATUS =================
 @app.route('/api/parking-status')
 def parking_status():
     occupied = latest_parking["total"] - latest_parking["available"]
@@ -144,6 +156,7 @@ def parking_status():
         "total": latest_parking["total"]
     })
 
-# ================= RUN =================
+
+# ================= RUN APP =================
 if __name__ == '__main__':
     socketio.run(app, debug=True)
