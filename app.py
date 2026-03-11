@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -142,7 +142,8 @@ def update_parking():
 # ================= LOGOUT =================
 @app.route('/logout')
 def logout():
-    return redirect(url_for('intro'))
+    session.clear()
+    return redirect(url_for('login'))
 
 
 # ================= API PARKING STATUS =================
