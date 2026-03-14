@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Registered Users</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+margin:0;
+}
+
+nav{
+background:#004b6b;
+padding:15px 40px;
+color:white;
+display:flex;
+justify-content:space-between;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+}
+
+.container{
+max-width:1000px;
+margin:50px auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#0e7490;
+color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>Admin Panel</div>
+<div>
+<a href="/dashboard">Dashboard</a>
+<a href="/parking_logs">Logs</a>
+<a href="/logout">Logout</a>
+</div>
+</nav>
+
+<div class="container">
+
+<h2>Registered Users</h2>
+
+<table>
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>RFID UID</th>
+</tr>
+
+{% for user in users %}
+
+<tr>
+<td>{{ user[0] }}</td>
+<td>{{ user[1] }}</td>
+<td>{{ user[2] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from flask_socketio import SocketIO
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -37,13 +38,17 @@ def intro():
 # ================= LOGIN =================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
     if request.method == 'POST':
         try:
             email = request.form.get('email')
             password = request.form.get('password')
 
-            if email:
-                email = email.lower().strip()
+            if not email or not password:
+                flash("Please enter both email and password.", "danger")
+                return render_template('login.html')
+
+            email = email.lower().strip()
 
             cur = mysql.connection.cursor()
             cur.execute(
@@ -54,17 +59,18 @@ def login():
             cur.close()
 
             if user and check_password_hash(user[0], password):
+                session['user_email'] = email
                 flash("Login successful!", "success")
                 return redirect(url_for('dashboard'))
+
             else:
                 flash("Invalid email or password.", "danger")
 
         except Exception as e:
             print("Login Error:", e)
-            flash("Login failed.", "danger")
+            flash("Login failed. Please try again.", "danger")
 
     return render_template('login.html')
-
 
 # ================= REGISTER =================
 @app.route('/register', methods=['GET', 'POST'])
@@ -156,6 +162,46 @@ def parking_status():
         "occupied": occupied,
         "total": latest_parking["total"]
     })
+
+
+@app.route("/parking_logs")
+def parking_logs():
+
+    logs = [
+        {"rfid":"89 5E 4E 07","time_in":"8:15 AM","time_out":"10:02 AM","status":"Completed"},
+        {"rfid":"5B 71 0B 4F","time_in":"9:30 AM","time_out":"--","status":"Inside"},
+        {"rfid":"1B 4D FD 4E","time_in":"7:55 AM","time_out":"9:10 AM","status":"Completed"}
+    ]
+
+    return render_template("parking_logs.html", logs=logs)
+
+
+
+@app.route("/users")
+def users():
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT email, rfid FROM registered")
+    users = cur.fetchall()
+    cur.close()
+
+    return render_template("users.html", users=users)
+
+
+@app.route("/vehicles_inside")
+def vehicles_inside():
+
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT r.rfid, p.time_in
+        FROM parking_logs p
+        JOIN registered r ON p.user_id = r.id
+        WHERE p.time_out IS NULL
+    """)
+    vehicles = cur.fetchall()
+    cur.close()
+
+    return render_template("vehicles_inside.html", vehicles=vehicles)
 
 
 # ================= RUN APP =================

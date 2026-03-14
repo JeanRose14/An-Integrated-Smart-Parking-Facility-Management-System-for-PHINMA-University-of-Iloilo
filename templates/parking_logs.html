@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Parking Logs</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+margin:0;
+}
+
+nav{
+background:#004b6b;
+color:white;
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+}
+
+.container{
+max-width:1000px;
+margin:50px auto;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h2{
+margin-bottom:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#0e7490;
+color:white;
+}
+
+.status-in{
+color:green;
+font-weight:bold;
+}
+
+.status-out{
+color:#444;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>PHINMA Parking</div>
+<div>
+<a href="/dashboard">Dashboard</a>
+<a href="/parking_logs">Parking Logs</a>
+<a href="/logout">Logout</a>
+</div>
+</nav>
+
+<div class="container">
+
+<h2>Parking Activity Logs</h2>
+
+<table>
+
+<tr>
+<th>RFID UID</th>
+<th>Time In</th>
+<th>Time Out</th>
+<th>Status</th>
+</tr>
+
+{% for log in logs %}
+
+<tr>
+<td>{{ log.rfid }}</td>
+<td>{{ log.time_in }}</td>
+<td>{{ log.time_out }}</td>
+
+<td>
+{% if log.status == "Inside" %}
+<span class="status-in">Inside</span>
+{% else %}
+<span class="status-out">Completed</span>
+{% endif %}
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

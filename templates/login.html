@@ -2,177 +2,234 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Login | PHINMA UI Smart Parking</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+<title>Login | PHINMA UI Smart Parking</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box; /* ⭐ fixes uneven margins */
-        }
+<style>
 
-        .login-card input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-                
-        footer {
-            background-color: #002a3b;
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-        }
-             /* NAVBAR CONTAINER */
-        nav {
-            background-color: #004b6b;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
 
-        /* LOGO */
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-        }
+body{
+display:flex;
+flex-direction:column;
+min-height:100vh;
+}
 
-        /* MENU LIST */
-        nav ul {
-            list-style: none;
-            /* ❌ remove bullets */
-            display: flex;
-            /* ✅ horizontal */
-            gap: 25px;
-            padding: 0;
-        }
+/* NAVBAR */
+nav{
+background:#004b6b;
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 
-        /* MENU LINKS */
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
+.logo{
+font-size:24px;
+font-weight:bold;
+color:#fff;
+}
 
-        nav ul li a:hover {
-            color: #ffcc00;
-        }
+nav ul{
+list-style:none;
+display:flex;
+gap:25px;
+}
 
-         * {
-            margin: 0;
-            padding: 0;
-        }
-        /* Reuse hero layout */
-        .hero {
-            flex: 1;
-            min-height: 64vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 60px 40px;
-        }
+nav ul li a{
+color:white;
+text-decoration:none;
+font-weight:500;
+}
 
-        /* Login Form Card */
-        .login-card {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+nav ul li a:hover{
+color:#ffcc00;
+}
 
-        .login-card h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #004b6b;
-        }
+/* HERO */
+.hero{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:60px 40px;
+}
 
-        .login-card label {
-            font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+/* LOGIN CARD */
+.login-card{
+background:rgba(255,255,255,0.95);
+padding:35px;
+border-radius:12px;
+width:100%;
+max-width:400px;
+box-shadow:0 8px 25px rgba(0,0,0,0.25);
+}
 
-        .login-card input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+.login-card h2{
+text-align:center;
+margin-bottom:20px;
+color:#004b6b;
+}
 
-        .login-card button {
-            width: 100%;
-            background-color: #ffcc00;
-            color: black;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+/* FORM */
+.login-card label{
+font-size:14px;
+display:block;
+margin-bottom:5px;
+font-weight:bold;
+}
 
-        .login-card button:hover {
-            background-color: #e6b800;
-        }
+.login-card input{
+width:100%;
+padding:10px;
+margin-bottom:15px;
+border-radius:6px;
+border:1px solid #ccc;
+}
 
-        .login-card p {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
+/* BUTTON */
+.login-card button{
+width:100%;
+background:#ffcc00;
+color:black;
+padding:10px;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+}
 
-        .login-card a {
-            color: #004b6b;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    </style>
+.login-card button:hover{
+background:#e6b800;
+}
+
+/* REGISTER LINK */
+.login-card p{
+text-align:center;
+margin-top:15px;
+font-size:14px;
+}
+
+.login-card a{
+color:#004b6b;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* FLASH MESSAGE */
+.alert{
+padding:10px;
+margin-bottom:15px;
+border-radius:6px;
+font-size:14px;
+text-align:center;
+opacity:1;
+transition:opacity 0.5s ease;
+}
+
+.alert.success{
+background:#16a34a;
+color:white;
+}
+
+.alert.danger{
+background:#ef4444;
+color:white;
+}
+
+.alert.warning{
+background:#f59e0b;
+color:white;
+}
+
+/* FOOTER */
+footer{
+background:#002a3b;
+color:white;
+text-align:center;
+padding:15px 0;
+margin-top:auto;
+}
+
+</style>
 </head>
 
 <body>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">Website</div>
-        <ul>
-            <li><a href="#">Help</a></li>
-            <li><a href="#">About</a></li>
-        </ul>
-    </nav>
+<!-- NAVIGATION -->
+<nav>
+<div class="logo">Website</div>
+<ul>
+<li><a href="#">Help</a></li>
+<li><a href="#">About</a></li>
+</ul>
+</nav>
 
-    <!-- Hero / Login Section -->
-    <header class="hero">
-        <div class="login-card">
-            <h2>Login</h2>
+<!-- LOGIN -->
+<header class="hero">
+<div class="login-card">
 
-            <form method="POST" action="{{ url_for('login') }}">
-                <label for="email">Email Address</label>
-                <input type="email" name="email" id="email" placeholder="Enter your email" required>
+<h2>Login</h2>
 
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="Enter your password" required>
+<!-- FLASH MESSAGE -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert {{ category }}" id="flashMessage">
+{{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 
-                <button type="submit">Login</button>
-            </form>
+<form method="POST" action="{{ url_for('login') }}">
 
-            <p>Don’t have an account? <a href="{{ url_for('register') }}">Register here</a></p>
-        </div>
-    </header>
+<label>Email Address</label>
+<input type="email" name="email" placeholder="Enter your email" required>
 
-    <!-- Footer -->
-    <footer>
-        <p>© 2026 PHINMA UI Smart Parking System</p>
-    </footer>
+<label>Password</label>
+<input type="password" name="password" placeholder="Enter your password" required>
+
+<button type="submit">Login</button>
+
+</form>
+
+<p>Don’t have an account? 
+<a href="{{ url_for('register') }}">Register here</a>
+</p>
+
+</div>
+</header>
+
+<footer>
+<p>© 2026 PHINMA UI Smart Parking System</p>
+</footer>
+
+<script>
+
+/* AUTO HIDE FLASH MESSAGE AFTER 3 SECONDS */
+
+setTimeout(function(){
+
+let flash = document.getElementById("flashMessage");
+
+if(flash){
+flash.style.opacity="0";
+
+setTimeout(function(){
+flash.style.display="none";
+},500);
+}
+
+},3000);
+
+</script>
 
 </body>
-
 </html>
