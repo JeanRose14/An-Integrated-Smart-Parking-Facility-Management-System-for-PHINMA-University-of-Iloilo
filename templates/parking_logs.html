@@ -2,41 +2,64 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Parking Logs</title>
+<title>Parking Logs | PHINMA UI Smart Parking</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-body{
-font-family:Arial;
-background:#f4f6f9;
-margin:0;
+/* HERO */
+.hero{
+flex:1;
+min-height:64vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:60px 40px;
 }
 
+/* SAME CARD STYLE */
+.dashboard-card{
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(12px);
+padding:34px;
+border-radius:18px;
+width:100%;
+max-width:1150px;
+box-shadow:0 25px 55px rgba(0,0,0,.30);
+}
+
+/* NAVBAR */
 nav{
-background:#004b6b;
-color:white;
+background-color:#004b6b;
 padding:15px 40px;
 display:flex;
 justify-content:space-between;
+align-items:center;
 }
 
-nav a{
-color:white;
+.logo{
+font-size:24px;
+font-weight:bold;
+color:#fff
+}
+
+nav ul{
+list-style:none;
+display:flex;
+gap:25px
+}
+
+nav ul li a{
+color:#fff;
 text-decoration:none;
-margin-left:20px;
+font-weight:500
 }
 
-.container{
-max-width:1000px;
-margin:50px auto;
-background:white;
-padding:30px;
-border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
-}
-
+/* TABLE */
 h2{
 margin-bottom:20px;
+color:#004b6b;
 }
 
 table{
@@ -56,29 +79,39 @@ color:white;
 }
 
 .status-in{
-color:green;
+color:#16a34a;
 font-weight:bold;
 }
 
 .status-out{
-color:#444;
+color:#555;
 }
 
+/* FOOTER */
+footer{
+background-color:#002a3b;
+color:#fff;
+text-align:center;
+padding:15px 0;
+}
 </style>
 </head>
 
 <body>
 
 <nav>
-<div>PHINMA Parking</div>
-<div>
-<a href="/dashboard">Dashboard</a>
-<a href="/parking_logs">Parking Logs</a>
-<a href="/logout">Logout</a>
-</div>
+<div class="logo">Website</div>
+<ul>
+<li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+<li><a href="{{ url_for('users') }}">Users</a></li>
+<li><a href="{{ url_for('vehicles_inside') }}">Vehicles Inside</a></li>
+<li><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
 </nav>
 
-<div class="container">
+<header class="hero">
+
+<div class="dashboard-card">
 
 <h2>Parking Activity Logs</h2>
 
@@ -113,6 +146,12 @@ color:#444;
 </table>
 
 </div>
+
+</header>
+
+<footer>
+<p>© 2026 PHINMA UI Smart Parking System</p>
+</footer>
 
 </body>
 </html>
