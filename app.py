@@ -73,7 +73,44 @@ def register():
 # ================= DASHBOARD =================
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    cur = mysql.connection.cursor()
+
+    # Count vehicles currently inside
+    cur.execute("SELECT COUNT(*) FROM parking_logs WHERE status='Inside'")
+    occupied = cur.fetchone()[0]
+
+    total = latest_parking["total"]
+    available = total - occupied
+
+    # Get last scan in
+    cur.execute("""
+        SELECT time_in FROM parking_logs
+        ORDER BY time_in DESC LIMIT 1
+    """)
+    last_in = cur.fetchone()
+    last_scan_in = last_in[0].strftime("%I:%M:%S %p") if last_in and last_in[0] else "--"
+
+    # Get last scan out
+    cur.execute("""
+        SELECT time_out FROM parking_logs
+        WHERE time_out IS NOT NULL
+        ORDER BY time_out DESC LIMIT 1
+    """)
+    last_out = cur.fetchone()
+    last_scan_out = last_out[0].strftime("%I:%M:%S %p") if last_out and last_out[0] else "--"
+
+    cur.close()
+
+    # Keep in-memory state in sync
+    latest_parking["available"] = available
+
+    return render_template('dashboard.html',
+        available=available,
+        occupied=occupied,
+        total=total,
+        last_scan_in=last_scan_in,
+        last_scan_out=last_scan_out
+    )
 
 # ================= 🔥 RFID MAIN LOGIC =================
 @app.route('/update-parking', methods=['POST'])
