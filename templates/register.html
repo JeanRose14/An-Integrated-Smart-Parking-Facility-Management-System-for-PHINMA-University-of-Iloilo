@@ -1,179 +1,158 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Register | PHINMA UI Smart Parking</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box; /* ⭐ fixes uneven margins */
-            font-family:Arial, Helvetica, sans-serif;
-        }
+<meta charset="UTF-8">
+<title>Register | PHINMA UI Smart Parking</title>
 
-        .login-card input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .hero {
-            flex: 1;
-            min-height: 64vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 60px 40px;
-        }
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-        .register-card {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        .register-card h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #004b6b;
-        }
+/* HERO */
+.hero {
+  min-height: 64vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+}
 
-        .register-card label {
-            font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+/* 🔥 IMPROVED BOX (SAME STYLE SA DASHBOARD) */
+.register-card {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 25px 55px rgba(0,0,0,0.3);
+}
 
-        .register-card input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+/* TITLE */
+.register-card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #004b6b;
+}
 
-        .register-card button {
-            width: 100%;
-            background-color: #ffcc00;
-            color: black;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+/* LABEL */
+.register-card label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  display: block;
+  font-weight: 600;
+}
 
-        .register-card button:hover {
-            background-color: #e6b800;
-        }
+/* INPUT */
+.register-card input,
+.register-card select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: 0.2s;
+}
 
-        .register-card p {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
+.register-card input:focus,
+.register-card select:focus {
+  border-color: #facc15;
+  outline: none;
+}
 
-        .register-card a {
-            color: #004b6b;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        footer {
-            background-color: #002a3b;
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-        }
-             /* NAVBAR CONTAINER */
-        nav {
-            background-color: #004b6b;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* BUTTON */
+.register-card button {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #ffcc00, #facc15);
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-        /* LOGO */
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-        }
+.register-card button:hover {
+  transform: scale(1.03);
+}
 
-        /* MENU LIST */
-        nav ul {
-            list-style: none;
-            /* ❌ remove bullets */
-            display: flex;
-            /* ✅ horizontal */
-            gap: 25px;
-            padding: 0;
-        }
+/* NAVBAR */
+nav {
+  background-color: #004b6b;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: center;
+}
 
-        /* MENU LINKS */
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
+.logo {
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+}
 
-        nav ul li a:hover {
-            color: #ffcc00;
-        }
-
-         * {
-            margin: 0;
-            padding: 0;
-        }
-
-    </style>
+/* FOOTER */
+footer {
+  background-color: #002a3b;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+}
+</style>
 </head>
 
 <body>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">An Integrated Smart Parking Facility Management System for PHINMA University of Iloilo</div>
-    </nav>
+<nav>
+  <div class="logo">
+    An Integrated Smart Parking Facility Management System for PHINMA University of Iloilo
+  </div>
+</nav>
 
-    <!-- Hero / Register Section -->
-    <header class="hero">
-        <div class="register-card">
-            <h2>Create Account</h2>
+<header class="hero">
 
-            <!-- ✅ Flask POST -->
-            <form method="POST" action="{{ url_for('register') }}">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="full_name" placeholder="Enter your full name" required>
+<div class="register-card">
 
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+<h2>Create Account</h2>
 
-                <label for="vehicle">Vehicle Plate No.</label>
-                <input type="text" id="vehicle" name="vehicle_plate_number" placeholder="ABC-1234" required>
+<form method="POST" action="{{ url_for('register') }}">
 
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Create password" required>
+<label>Full Name</label>
+<input type="text" name="full_name" required>
 
-                <!-- ✅ FIX: remove <a> inside button -->
-                <button type="submit">Register</button>
-            </form>
+<label>Email</label>
+<input type="email" name="email" required>
 
-            <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
-        </div>
-    </header>
+<label>Role</label>
+<select name="role" required>
+  <option value="">Select Role</option>
+  <option value="Admin">Admin</option>
+  <option value="Staff">Staff</option>
+</select>
 
-    <footer>
-        <p>© 2026 PHINMA UI Smart Parking System</p>
-    </footer>
+<label>Password</label>
+<input type="password" name="password" required>
+
+<button type="submit">Register</button>
+
+</form>
+
+<p style="text-align:center;margin-top:15px;">
+Already have an account? <a href="{{ url_for('login') }}">Login</a>
+</p>
+
+</div>
+
+</header>
+
+<footer>
+<p>© 2026 PHINMA UI Smart Parking System</p>
+</footer>
 
 </body>
 </html>
