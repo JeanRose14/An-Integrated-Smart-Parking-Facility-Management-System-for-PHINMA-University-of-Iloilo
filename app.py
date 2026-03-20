@@ -122,19 +122,13 @@ def update_parking():
     available = data.get("available")
     total = data.get("total")
 
-    # ❌ STOP if no RFID
     if not rfid:
         return jsonify({"error": "No RFID"}), 400
 
     try:
         cur = mysql.connection.cursor()
 
-        # 🔍 GET USER ID (optional)
-        cur.execute("SELECT id FROM registered WHERE rfid=%s", (rfid,))
-        user = cur.fetchone()
-        user_id = user[0] if user else None
-
-        # 🔍 CHECK IF INSIDE
+        # 🔍 CHECK IF ALREADY INSIDE
         cur.execute("""
             SELECT id FROM parking_logs
             WHERE rfid=%s AND status='Inside'
@@ -145,9 +139,15 @@ def update_parking():
         # ================= TIME IN =================
         if existing is None:
             cur.execute("""
-                INSERT INTO parking_logs (user_id, rfid, time_in, status)
-                VALUES (%s, %s, NOW(), 'Inside')
-            """, (user_id, rfid))
+                INSERT INTO parking_logs (rfid, time_in, status)
+                VALUES (%s, NOW(), 'Inside')
+            """, (rfid,))
+            scan_type = "IN"
+
+            cur.execute("""
+                SELECT time_in FROM parking_logs
+                ORDER BY id DESC LIMIT 1
+            """)
 
         # ================= TIME OUT =================
         else:
@@ -156,17 +156,47 @@ def update_parking():
                 SET time_out=NOW(), status='Completed'
                 WHERE id=%s
             """, (existing[0],))
+            scan_type = "OUT"
+
+            cur.execute("""
+                SELECT time_out FROM parking_logs
+                ORDER BY id DESC LIMIT 1
+            """)
+
+        result = cur.fetchone()
 
         mysql.connection.commit()
         cur.close()
 
-    except Exception as e:
-        print("DB ERROR:", e)
+        now_time = result[0].strftime("%I:%M:%S %p") if result else "--"
 
-    # 🔥 UPDATE PARKING STATE
-    if available is not None and total is not None:
-        latest_parking["available"] = available
-        latest_parking["total"] = total
+        # 🔥 UPDATE STATE
+        if available is not None and total is not None:
+            latest_parking["available"] = available
+            latest_parking["total"] = total
+
+        occupied = latest_parking["total"] - latest_parking["available"]
+
+        # 🔥 SINGLE EMIT
+        socketio.emit("parking_update", {
+            "available": latest_parking["available"],
+            "occupied": occupied,
+            "total": latest_parking["total"],
+            "scan_time": now_time,
+            "type": scan_type
+        })
+
+        # 🔥 ADD THIS (AUTO UPDATE PARKING LOGS PAGE)
+        socketio.emit("new_log", {
+            "rfid": rfid,
+            "time": now_time,
+            "type": scan_type
+        })
+
+        print("✅ SAVED TO DB:", rfid, scan_type)
+
+    except Exception as e:
+        print("❌ DB ERROR:", e)
 
     return jsonify({"status": "ok"})
 
@@ -195,15 +225,124 @@ def parking_logs():
 
     return render_template("parking_logs.html", logs=logs)
 
-# ================= USERS =================
+# ================= REGISTRATION FOR USERS =================
+@app.route('/reg-user', methods=['GET', 'POST'])
+def reg_user():
+
+    if request.method == 'POST':
+        from werkzeug.security import generate_password_hash
+        from datetime import datetime, timedelta
+
+        full_name = request.form.get('full_name')
+        email = request.form.get('email')
+        plate = request.form.get('vehicle_plate_number')
+        rfid = request.form.get('rfid')
+        role = request.form.get('role')
+        password = generate_password_hash(request.form.get('password'))
+
+        date_registered = datetime.now()
+        expiration_date = date_registered + timedelta(days=30)  # 30 days validity
+
+        try:
+            cur = mysql.connection.cursor()
+
+            # check duplicate
+            cur.execute("SELECT id FROM users WHERE email=%s OR rfid=%s", (email, rfid))
+            if cur.fetchone():
+                return "User already exists!"
+
+            cur.execute("""
+                INSERT INTO users 
+                (full_name, email, vehicle_plate_number, rfid, role, password, date_registered, expiration_date)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (full_name, email, plate, rfid, role, password, date_registered, expiration_date))
+
+            mysql.connection.commit()
+            cur.close()
+
+            return "User Registered Successfully!"
+
+        except Exception as e:
+            print("ERROR:", e)
+            return "Error"
+
+    return render_template('reg_user.html')
+
+# ================= USERS PAGE =================
 @app.route("/users")
 def users():
+    # simple render lang (no data needed)
+    return render_template("users.html")
+
+
+# ================= API GET USERS =================
+@app.route("/api/users")
+def get_users():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT email, rfid FROM registered")
-    users = cur.fetchall()
+
+    cur.execute("""
+        SELECT id, full_name, email, rfid, vehicle_plate_number
+        FROM registered
+        ORDER BY id DESC
+    """)
+
+    rows = cur.fetchall()
     cur.close()
 
-    return render_template("users.html", users=users)
+    users = []
+    for r in rows:
+        users.append({
+            "id": r[0],
+            "name": r[1],
+            "email": r[2],
+            "rfid": r[3],
+            "plate": r[4]
+        })
+
+    return jsonify(users)
+
+
+# ================= DELETE USER =================
+@app.route("/delete-user/<int:user_id>", methods=["POST"])
+def delete_user(user_id):
+    cur = mysql.connection.cursor()
+
+    cur.execute("DELETE FROM registered WHERE id=%s", (user_id,))
+
+    mysql.connection.commit()
+    cur.close()
+
+    # 🔥 AUTO UPDATE FRONTEND
+    socketio.emit("users_update")
+
+    return jsonify({"status": "ok"})
+
+
+# ================= EDIT USER =================
+@app.route("/edit-user/<int:user_id>", methods=["POST"])
+def edit_user(user_id):
+    data = request.get_json()
+
+    name = data.get("name")
+    email = data.get("email")
+    rfid = data.get("rfid")
+    plate = data.get("plate")
+
+    cur = mysql.connection.cursor()
+
+    cur.execute("""
+        UPDATE registered
+        SET full_name=%s, email=%s, rfid=%s, vehicle_plate_number=%s
+        WHERE id=%s
+    """, (name, email, rfid, plate, user_id))
+
+    mysql.connection.commit()
+    cur.close()
+
+    # 🔥 AUTO UPDATE FRONTEND
+    socketio.emit("users_update")
+
+    return jsonify({"status": "ok"})
 
 # ================= VEHICLES INSIDE =================
 @app.route("/vehicles_inside")

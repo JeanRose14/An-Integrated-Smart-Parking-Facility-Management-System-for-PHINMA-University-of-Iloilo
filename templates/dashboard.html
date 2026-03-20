@@ -176,7 +176,7 @@
       <div class="logo">Website</div>
       <ul>
         <li><a href="{{ url_for('users') }}">Users</a></li>
-        <li><a href="{{ url_for('vehicles_inside') }}">Vehicles Inside</a></li>
+        <li><a href="{{ url_for('reg_user') }}">Registration Form</a></li>
         <li><a href="{{ url_for('logout') }}">Logout</a></li>
       </ul>
     </nav>
@@ -255,6 +255,12 @@
         document.getElementById("occupiedSlots").innerText = data.occupied;
         document.getElementById("totalSlots").innerText = data.total;
 
+        // 🔥 INSERT HERE
+        if (data.type === "IN") {
+          document.getElementById("timeIn").innerText = data.scan_time;
+        } else {
+          document.getElementById("timeOut").innerText = data.scan_time;
+        }
         const percent = (data.occupied / data.total) * 100;
         document.getElementById("progressFill").style.width = percent + "%";
 
@@ -280,9 +286,9 @@
 
       // Set initial progress bar and alert state on page load
       (function () {
-        const occupied = {{ occupied }};
-        const total = {{ total }};
-        const available = {{ available }};
+        const occupied = Number("{{ occupied }}") || 0;
+        const total = Number("{{ total }}") || 1;
+        const available = Number("{{ available }}") || 0;
         const percent = (occupied / total) * 100;
         document.getElementById("progressFill").style.width = percent + "%";
 

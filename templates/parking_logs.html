@@ -153,5 +153,38 @@ padding:15px 0;
 <p>© 2026 PHINMA UI Smart Parking System</p>
 </footer>
 
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+
+<script>
+const socket = io("http://127.0.0.1:5000");
+
+socket.on("connect", () => {
+  console.log("Logs page connected");
+});
+
+// 🔥 AUTO ADD NEW LOG
+socket.on("new_log", (data) => {
+
+  const table = document.querySelector("table");
+
+  if (!table) return; // safety
+
+  const newRow = document.createElement("tr");
+
+  let statusText = data.type === "IN" ? "Inside" : "Completed";
+  let statusClass = data.type === "IN" ? "status-in" : "status-out";
+
+  newRow.innerHTML = `
+    <td>${data.rfid}</td>
+    <td>${data.type === "IN" ? data.time : "--"}</td>
+    <td>${data.type === "OUT" ? data.time : "--"}</td>
+    <td><span class="${statusClass}">${statusText}</span></td>
+  `;
+
+  // 🔥 insert after header row
+  table.insertBefore(newRow, table.rows[1]);
+});
+</script>
+
 </body>
 </html>
