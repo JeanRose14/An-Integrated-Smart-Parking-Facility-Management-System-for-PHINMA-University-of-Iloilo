@@ -1,39 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Registered Users</title>
+<meta charset="UTF-8">
+<title>Users | PHINMA UI Smart Parking</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-body{
-font-family:Arial;
-background:#f4f6f9;
-margin:0;
+/* HERO */
+.hero{
+flex:1;
+min-height:64vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:60px 40px;
 }
 
+/* CARD */
+.dashboard-card{
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(12px);
+padding:34px;
+border-radius:18px;
+width:100%;
+max-width:1150px;
+box-shadow:0 25px 55px rgba(0,0,0,.30);
+}
+
+/* NAVBAR */
 nav{
-background:#004b6b;
+background-color:#004b6b;
 padding:15px 40px;
-color:white;
 display:flex;
 justify-content:space-between;
+align-items:center;
 }
 
-nav a{
-color:white;
+.logo{
+font-size:24px;
+font-weight:bold;
+color:#fff;
+}
+
+nav ul{
+list-style:none;
+display:flex;
+gap:25px;
+}
+
+nav ul li a{
+color:#fff;
 text-decoration:none;
-margin-left:20px;
+font-weight:500;
 }
 
-.container{
-max-width:1000px;
-margin:50px auto;
-background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 8px 20px rgba(0,0,0,0.2);
+/* SEARCH */
+.search-box{
+margin-bottom:15px;
 }
 
+.search-box input{
+padding:8px;
+width:250px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+/* TABLE */
 table{
 width:100%;
 border-collapse:collapse;
@@ -50,45 +86,153 @@ background:#0e7490;
 color:white;
 }
 
+/* BUTTONS */
+button{
+padding:6px 10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin:2px;
+}
+
+.edit{background:#22c55e;color:white;}
+.delete{background:#ef4444;color:white;}
+
+/* FOOTER */
+footer{
+background-color:#002a3b;
+color:#fff;
+text-align:center;
+padding:15px 0;
+}
 </style>
 </head>
 
 <body>
 
 <nav>
-<div>Admin Panel</div>
-<div>
-<a href="/dashboard">Dashboard</a>
-<a href="/parking_logs">Logs</a>
-<a href="/logout">Logout</a>
-</div>
+<div class="logo">Website</div>
+<ul>
+<li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+<li><a href="{{ url_for('users') }}">Users</a></li>
+<li><a href="{{ url_for('reg_user') }}">Registration Form</a></li>
+<li><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
 </nav>
 
-<div class="container">
+<header class="hero">
 
-<h2>Registered Users</h2>
+<div class="dashboard-card">
 
-<table>
+<h2 style="margin-bottom:15px;">Registered Users</h2>
 
+<div class="search-box">
+<input type="text" id="search" placeholder="Search user...">
+</div>
+
+<table id="table">
 <tr>
 <th>Name</th>
 <th>Email</th>
-<th>RFID UID</th>
+<th>RFID</th>
+<th>Plate</th>
+<th>Action</th>
 </tr>
-
-{% for user in users %}
-
-<tr>
-<td>{{ user[0] }}</td>
-<td>{{ user[1] }}</td>
-<td>{{ user[2] }}</td>
-</tr>
-
-{% endfor %}
-
 </table>
 
 </div>
+
+</header>
+
+<footer>
+<p>© 2026 PHINMA UI Smart Parking System</p>
+</footer>
+
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+
+<script>
+const socket = io();
+
+function loadUsers() {
+  fetch("/api/users")
+    .then(res => res.json())
+    .then(data => {
+
+      const table = document.getElementById("table");
+
+      table.innerHTML = `
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>RFID</th>
+          <th>Plate</th>
+          <th>Action</th>
+        </tr>
+      `;
+
+      data.forEach(u => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td contenteditable="true">${u.name}</td>
+          <td contenteditable="true">${u.email}</td>
+          <td contenteditable="true">${u.rfid}</td>
+          <td contenteditable="true">${u.plate}</td>
+          <td>
+            <button class="edit" onclick="saveUser(this, ${u.id})">Save</button>
+            <button class="delete" onclick="deleteUser(${u.id})">Delete</button>
+          </td>
+        `;
+
+        table.appendChild(row);
+      });
+
+    });
+}
+
+socket.on("users_update", () => {
+  loadUsers();
+});
+
+loadUsers();
+
+// 🔍 SEARCH
+document.getElementById("search").addEventListener("keyup", function() {
+  let filter = this.value.toLowerCase();
+  let rows = document.querySelectorAll("#table tr");
+
+  rows.forEach((row, i) => {
+    if (i === 0) return;
+    row.style.display = row.innerText.toLowerCase().includes(filter)
+      ? "" : "none";
+  });
+});
+
+// DELETE
+function deleteUser(id) {
+  if (!confirm("Delete user?")) return;
+  fetch(`/delete-user/${id}`, { method: "POST" });
+}
+
+// SAVE
+function saveUser(btn, id) {
+  const row = btn.parentElement.parentElement;
+  const cells = row.querySelectorAll("td");
+
+  const data = {
+    name: cells[0].innerText,
+    email: cells[1].innerText,
+    rfid: cells[2].innerText,
+    plate: cells[3].innerText
+  };
+
+  fetch(`/edit-user/${id}`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+}
+</script>
 
 </body>
 </html>
