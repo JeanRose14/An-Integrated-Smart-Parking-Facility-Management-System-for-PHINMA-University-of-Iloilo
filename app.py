@@ -54,14 +54,14 @@ def register():
     if request.method == 'POST':
         full_name = request.form.get('full_name')
         email = request.form.get('email').lower().strip()
-        plate = request.form.get('vehicle_plate_number')
         password = generate_password_hash(request.form.get('password'))
+        role = request.form.get('role')  # 🔥 ADD THIS
 
         cur = mysql.connection.cursor()
         cur.execute("""
-            INSERT INTO registered (full_name, email, vehicle_plate_number, password)
+            INSERT INTO registered (full_name, email, password, role)
             VALUES (%s, %s, %s, %s)
-        """, (full_name, email, plate, password))
+        """, (full_name, email, password, role))
 
         mysql.connection.commit()
         cur.close()
@@ -377,4 +377,4 @@ def parking_status():
 
 # ================= RUN =================
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
