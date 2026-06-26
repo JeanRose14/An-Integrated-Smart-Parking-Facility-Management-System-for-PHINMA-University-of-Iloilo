@@ -56,9 +56,9 @@ Serial Listener (serial_listener.py)
     ▼ POST /update-parking
 Flask Application (app.py)
     ├──► MySQL Database (pk_db)
-    │       ├── users (accounts + RFID)
+    │       ├── registered (users)
     │       ├── parking_logs (activity)
-    │       └── rfid_logs (raw scans, legacy)
+    │       └── rfid_logs (raw scans)
     │
     └──► Socket.IO Broadcast
             │
@@ -97,7 +97,7 @@ Flask Application (app.py)
 3. **Install dependencies**
 
    ```bash
-   pip install -r requirements.txt
+   pip install flask flask-mysqldb flask-socketio werkzeug
    ```
 
 ---
@@ -106,48 +106,44 @@ Flask Application (app.py)
 
 1. **Create the database and tables** in MySQL:
 
-    ```sql
-    CREATE DATABASE pk_db;
-    USE pk_db;
+   ```sql
+   CREATE DATABASE pk_db;
+   USE pk_db;
 
-    CREATE TABLE users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        full_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        vehicle_plate_number VARCHAR(50),
-        rfid VARCHAR(100) UNIQUE DEFAULT NULL,
-        role VARCHAR(50) DEFAULT 'Student',
-        password VARCHAR(255) NOT NULL,
-        date_registered DATETIME DEFAULT CURRENT_TIMESTAMP,
-        expiration_date DATETIME DEFAULT NULL
-    );
+   CREATE TABLE registered (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       full_name VARCHAR(255) NOT NULL,
+       email VARCHAR(255) UNIQUE NOT NULL,
+       vehicle_plate_number VARCHAR(50),
+       password VARCHAR(255) NOT NULL,
+       rfid VARCHAR(100) DEFAULT NULL
+   );
 
-    CREATE TABLE parking_logs (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT DEFAULT NULL,
-        rfid VARCHAR(100) NOT NULL,
-        time_in DATETIME,
-        time_out DATETIME DEFAULT NULL,
-        status VARCHAR(20) DEFAULT 'Inside',
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    );
-    ```
+   CREATE TABLE parking_logs (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       user_id INT DEFAULT NULL,
+       rfid VARCHAR(100) NOT NULL,
+       time_in DATETIME,
+       time_out DATETIME DEFAULT NULL,
+       status VARCHAR(20) DEFAULT 'Inside',
+       FOREIGN KEY (user_id) REFERENCES registered(id)
+   );
 
-2. **Configure database credentials** via environment variables (recommended) or in `app.py`:
+   CREATE TABLE rfid_logs (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       uid VARCHAR(100) NOT NULL
+   );
+   ```
 
-    ```bash
-    set SECRET_KEY=your_random_secret_key
-    set MYSQL_PASSWORD=your_password
-    ```
+2. **Configure database credentials** in `app.py`:
 
-    Or edit the defaults in `app.py`:
-
-    ```python
-    app.config['MYSQL_HOST'] = 'localhost'
-    app.config['MYSQL_USER'] = 'root'
-    app.config['MYSQL_PASSWORD'] = 'your_password'
-    app.config['MYSQL_DB'] = 'pk_db'
-    ```
+   ```python
+   app.config['MYSQL_HOST'] = 'localhost'
+   app.config['MYSQL_USER'] = 'root'
+   app.config['MYSQL_PASSWORD'] = 'your_password'
+   app.config['MYSQL_DB'] = 'pk_db'
+   app.config['MYSQL_PORT'] = 3306
+   ```
 
 ---
 
@@ -165,9 +161,10 @@ The application will start at **http://localhost:5000**.
 
 ```
 ├── app.py                     # Main Flask application (routes, socket events)
-├── serial_listener.py         # Serial-to-HTTP bridge for Arduino
-├── requirements.txt           # Python dependencies
-├── .gitignore                 # Git ignore rules
+├── controllers/
+│   └── controllers.py         # Route handlers
+├── models/
+│   └── models.py              # Database query functions
 ├── templates/
 │   ├── intro.html             # Landing page
 │   ├── login.html             # User login
@@ -175,7 +172,6 @@ The application will start at **http://localhost:5000**.
 │   ├── dashboard.html         # Real-time parking dashboard
 │   ├── parking_logs.html      # Parking activity logs
 │   ├── users.html             # Registered users list
-│   ├── reg_user.html          # Admin user registration
 │   └── vehicles_inside.html   # Currently parked vehicles
 ├── static/
 │   ├── style.css              # Global styles
@@ -195,16 +191,12 @@ The application will start at **http://localhost:5000**.
 | `/login`               | GET, POST  | User login                           |
 | `/register`            | GET, POST  | User registration                    |
 | `/dashboard`           | GET        | Real-time parking dashboard          |
-| `/update-parking`      | POST       | Process RFID scan or occupancy update|
+| `/update-parking`      | POST       | Process RFID scan (time in/out)      |
 | `/parking_logs`        | GET        | View all parking activity logs       |
 | `/users`               | GET        | List registered users                |
-| `/reg-user`            | GET, POST  | Admin user registration with RFID    |
 | `/vehicles_inside`     | GET        | View vehicles currently parked       |
-| `/delete-user/<id>`    | POST       | Delete a user                        |
-| `/edit-user/<id>`      | POST       | Edit user details                    |
-| `/api/parking-status`  | GET        | JSON API for parking availability    |
-| `/api/users`           | GET        | JSON API for registered users        |
 | `/logout`              | GET        | Clear session and redirect to login  |
+| `/api/parking-status`  | GET        | JSON API for parking availability    |
 
 ### API Response Example
 
