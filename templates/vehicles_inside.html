@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vehicles Inside | PHINMA UI Smart Parking</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+.hero{flex:1;min-height:64vh;display:flex;justify-content:center;align-items:center;padding:60px 40px}
+.dashboard-card{background:rgba(255,255,255,.92);backdrop-filter:blur(12px);padding:34px;border-radius:18px;width:100%;max-width:900px;box-shadow:0 25px 55px rgba(0,0,0,.30)}
+nav{background-color:#004b6b;padding:15px 40px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:24px;font-weight:bold;color:#fff}
+nav ul{list-style:none;display:flex;gap:25px}
+nav ul li a{color:#fff;text-decoration:none;font-weight:500}
+h2{margin-bottom:20px;color:#004b6b}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;border-bottom:1px solid #ddd;text-align:center}
+th{background:#0e7490;color:white}
+.status-in{color:#16a34a;font-weight:bold}
+footer{background-color:#002a3b;color:#fff;text-align:center;padding:15px 0}
+</style>
+</head>
+<body>
+<nav>
+<div class="logo">Website</div>
+<ul>
+<li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+<li><a href="{{ url_for('parking_logs') }}">Parking Logs</a></li>
+<li><a href="{{ url_for('users') }}">Users</a></li>
+<li><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
+</nav>
+<header class="hero">
+<div class="dashboard-card">
+<h2>Vehicles Inside</h2>
+{% if vehicles %}
+<table>
+<tr>
+<th>RFID UID</th>
+<th>Time In</th>
+</tr>
+{% for v in vehicles %}
+<tr>
+<td>{{ v[0] }}</td>
+<td>{{ v[1] }}</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p style="text-align:center;color:#666;">No vehicles currently inside.</p>
+{% endif %}
+</div>
+</header>
+<footer>
+<p>© 2026 PHINMA UI Smart Parking System</p>
+</footer>
+</body>
+</html>
