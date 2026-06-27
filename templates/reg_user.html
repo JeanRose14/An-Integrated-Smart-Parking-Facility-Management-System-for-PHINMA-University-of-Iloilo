@@ -68,6 +68,12 @@ border-color:#facc15;
 outline:none;
 }
 
+/* 🔥 FIX: use margin instead of transform (REAL movement) */
+.form-open input[type="password"]{
+margin-top:80px; /* gin push pa-idalom */
+transition:0.3s;
+}
+
 /* BUTTON */
 button{
 width:100%;
@@ -92,7 +98,7 @@ text-align:center;
 padding:15px;
 }
 
-/* 🔥 SUCCESS ALERT */
+/* SUCCESS ALERT */
 .alert{
 display:none;
 background:#16a34a;
@@ -119,7 +125,7 @@ font-weight:bold;
 
 <header class="hero">
 
-<div class="dashboard-card">
+<div class="dashboard-card" id="formContainer">
 
 <h2>Register User</h2>
 
@@ -134,7 +140,7 @@ font-weight:bold;
 <input type="text" name="vehicle_plate_number" placeholder="Plate Number" required>
 <input type="text" name="rfid" placeholder="RFID UID" required>
 
-<select name="role" required>
+<select name="role" required id="roleSelect">
 <option value="">Select Role</option>
 <option value="Student">Student</option>
 <option value="Faculty">Faculty</option>
@@ -169,18 +175,36 @@ form.addEventListener("submit", function(e){
   .then(res => res.text())
   .then(data => {
 
-    // 🔥 SHOW SUCCESS ALERT
     document.getElementById("successAlert").style.display = "block";
-
-    // 🔥 CLEAR FORM
     form.reset();
 
-    // 🔥 AUTO HIDE ALERT
     setTimeout(()=>{
       document.getElementById("successAlert").style.display = "none";
     }, 3000);
 
   });
+});
+
+
+// 🔥 FINAL FIX (UPDATED)
+const roleSelect = document.getElementById("roleSelect");
+const container = document.getElementById("formContainer");
+
+// open dropdown → manaog
+roleSelect.addEventListener("mousedown", () => {
+  container.classList.add("form-open");
+});
+
+// kung may gin select → balik
+roleSelect.addEventListener("change", () => {
+  setTimeout(() => {
+    container.classList.remove("form-open");
+  }, 150);
+});
+
+// 🔥 ADD THIS: para maski same value, mabalik gyapon
+roleSelect.addEventListener("blur", () => {
+  container.classList.remove("form-open");
 });
 </script>
 
