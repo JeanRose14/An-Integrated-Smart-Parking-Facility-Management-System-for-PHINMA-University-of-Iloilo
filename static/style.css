@@ -1,9 +1,14 @@
-  body {
-      background-image: url(/static/bg.jpg);
-      background-size: cover;
-      background-attachment: fixed;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-  }
+body {
+    background-image: url(/static/bg.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-color: #0b2b3b;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0b2b3b; }
+::-webkit-scrollbar-thumb { background: #0e7490; border-radius: 4px; }

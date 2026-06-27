@@ -2,120 +2,35 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Registration | PHINMA UI Smart Parking</title>
-
+<title>Register User | PHINMA UI Smart Parking</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-/* HERO */
-.hero{
-flex:1;
-min-height:64vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:60px 40px;
-}
-
-/* 🔥 IMPROVED CARD */
-.dashboard-card{
-background: rgba(255,255,255,0.95);
-backdrop-filter: blur(15px);
-padding:40px;
-border-radius:20px;
-width:100%;
-max-width:520px;
-box-shadow:0 30px 70px rgba(0,0,0,0.4);
-transition:0.3s;
-}
-
-.dashboard-card:hover{
-transform: translateY(-5px);
-}
-
-/* NAVBAR */
-nav{
-background-color:#004b6b;
-padding:15px 40px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-.logo{color:#fff;font-weight:bold}
-nav ul{display:flex;gap:20px;list-style:none}
-nav a{color:white;text-decoration:none}
-
-/* TITLE */
-h2{
-margin-bottom:20px;
-text-align:center;
-}
-
-/* INPUT */
-input, select{
-width:100%;
-padding:13px;
-margin-bottom:12px;
-border-radius:10px;
-border:1px solid #ccc;
-transition:0.2s;
-}
-
-input:focus, select:focus{
-border-color:#facc15;
-outline:none;
-}
-
-/* 🔥 FIX: use margin instead of transform (REAL movement) */
-.form-open input[type="password"]{
-margin-top:80px; /* gin push pa-idalom */
-transition:0.3s;
-}
-
-/* BUTTON */
-button{
-width:100%;
-padding:14px;
-background:linear-gradient(135deg,#ffcc00,#facc15);
-border:none;
-border-radius:10px;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-transform:scale(1.03);
-}
-
-/* FOOTER */
-footer{
-background:#002a3b;
-color:#fff;
-text-align:center;
-padding:15px;
-}
-
-/* SUCCESS ALERT */
-.alert{
-display:none;
-background:#16a34a;
-color:#fff;
-padding:12px;
-border-radius:8px;
-margin-bottom:15px;
-text-align:center;
-font-weight:bold;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{display:flex;flex-direction:column;min-height:100vh}
+nav{background:#004b6b;padding:15px 40px;display:flex;justify-content:space-between;align-items:center}
+.logo{color:#fff;font-weight:bold;font-size:18px}
+nav ul{list-style:none;display:flex;gap:25px}
+nav ul li a{color:#fff;text-decoration:none;font-weight:500}
+.hero{flex:1;min-height:64vh;display:flex;justify-content:center;align-items:center;padding:60px 40px}
+.dashboard-card{background:rgba(255,255,255,0.95);backdrop-filter:blur(15px);padding:40px;border-radius:20px;width:100%;max-width:540px;box-shadow:0 30px 70px rgba(0,0,0,0.4)}
+h2{margin-bottom:20px;text-align:center;color:#004b6b}
+input,select{width:100%;padding:13px;margin-bottom:12px;border-radius:10px;border:1px solid #ccc;transition:0.2s}
+input:focus,select:focus{border-color:#facc15;outline:none}
+.input-row{display:flex;gap:12px}
+.input-row>*{flex:1}
+button{width:100%;padding:14px;background:linear-gradient(135deg,#ffcc00,#facc15);border:none;border-radius:10px;font-weight:bold;cursor:pointer;transition:0.3s;font-size:15px}
+button:hover{transform:scale(1.03)}
+.alert{padding:12px;border-radius:8px;margin-bottom:15px;text-align:center;font-weight:bold}
+.alert.success{background:#16a34a;color:#fff}
+.alert.danger{background:#ef4444;color:#fff}
+.alert.warning{background:#f59e0b;color:#fff}
+footer{background:#002a3b;color:#fff;text-align:center;padding:15px}
 </style>
 </head>
-
 <body>
 
 <nav>
-<div class="logo">Website</div>
+<div class="logo">PHINMA UI</div>
 <ul>
 <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
 <li><a href="{{ url_for('users') }}">Users</a></li>
@@ -124,89 +39,46 @@ font-weight:bold;
 </nav>
 
 <header class="hero">
+<div class="dashboard-card">
 
-<div class="dashboard-card" id="formContainer">
+<h2>Register New Parking User</h2>
 
-<h2>Register User</h2>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert {{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 
-<div class="alert" id="successAlert">
-✅ User Registered Successfully!
+<form method="POST">
+<input type="text" name="full_name" placeholder="Full Name" required>
+<input type="email" name="email" placeholder="Email Address" required>
+
+<div class="input-row">
+  <input type="text" name="vehicle_plate_number" placeholder="Plate Number" required>
+  <input type="text" name="rfid" placeholder="RFID UID" required>
 </div>
 
-<form id="userForm" method="POST">
-
-<input type="text" name="full_name" placeholder="Full Name" required>
-<input type="email" name="email" placeholder="Email" required>
-<input type="text" name="vehicle_plate_number" placeholder="Plate Number" required>
-<input type="text" name="rfid" placeholder="RFID UID" required>
-
-<select name="role" required id="roleSelect">
-<option value="">Select Role</option>
-<option value="Student">Student</option>
-<option value="Faculty">Faculty</option>
-</select>
-
-<input type="password" name="password" placeholder="Password" required>
+<div class="input-row">
+  <select name="role" required>
+    <option value="">Select Role</option>
+    <option value="Student">Student</option>
+    <option value="Faculty">Faculty</option>
+    <option value="Staff">Staff</option>
+  </select>
+  <input type="password" name="password" placeholder="Password" value="parking123">
+</div>
 
 <button type="submit">Register User</button>
-
 </form>
 
 </div>
-
 </header>
 
 <footer>
-<p>© 2026 PHINMA UI Smart Parking System</p>
+<p>&copy; 2026 PHINMA UI Smart Parking System</p>
 </footer>
-
-<script>
-const form = document.getElementById("userForm");
-
-form.addEventListener("submit", function(e){
-  e.preventDefault();
-
-  const formData = new FormData(form);
-
-  fetch("/reg-user", {
-    method: "POST",
-    body: formData
-  })
-  .then(res => res.text())
-  .then(data => {
-
-    document.getElementById("successAlert").style.display = "block";
-    form.reset();
-
-    setTimeout(()=>{
-      document.getElementById("successAlert").style.display = "none";
-    }, 3000);
-
-  });
-});
-
-
-// 🔥 FINAL FIX (UPDATED)
-const roleSelect = document.getElementById("roleSelect");
-const container = document.getElementById("formContainer");
-
-// open dropdown → manaog
-roleSelect.addEventListener("mousedown", () => {
-  container.classList.add("form-open");
-});
-
-// kung may gin select → balik
-roleSelect.addEventListener("change", () => {
-  setTimeout(() => {
-    container.classList.remove("form-open");
-  }, 150);
-});
-
-// 🔥 ADD THIS: para maski same value, mabalik gyapon
-roleSelect.addEventListener("blur", () => {
-  container.classList.remove("form-open");
-});
-</script>
 
 </body>
 </html>

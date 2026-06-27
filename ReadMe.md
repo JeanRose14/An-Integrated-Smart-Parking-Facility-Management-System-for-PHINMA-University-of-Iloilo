@@ -114,10 +114,19 @@ Flask Application (app.py)
        id INT AUTO_INCREMENT PRIMARY KEY,
        full_name VARCHAR(255) NOT NULL,
        email VARCHAR(255) UNIQUE NOT NULL,
-       vehicle_plate_number VARCHAR(50),
+       vehicle_plate_number VARCHAR(50) DEFAULT NULL,
        password VARCHAR(255) NOT NULL,
-       rfid VARCHAR(100) DEFAULT NULL
+       rfid VARCHAR(100) DEFAULT NULL,
+       role VARCHAR(50) DEFAULT 'Student',
+       date_registered DATETIME DEFAULT CURRENT_TIMESTAMP,
+       expiration_date DATETIME DEFAULT NULL
    );
+
+   -- If you already created the table without role/date columns, run:
+   -- ALTER TABLE registered
+   --   ADD COLUMN role VARCHAR(50) DEFAULT 'Student',
+   --   ADD COLUMN date_registered DATETIME DEFAULT CURRENT_TIMESTAMP,
+   --   ADD COLUMN expiration_date DATETIME DEFAULT NULL;
 
    CREATE TABLE parking_logs (
        id INT AUTO_INCREMENT PRIMARY KEY,
@@ -189,11 +198,15 @@ The application will start at **http://localhost:5000**.
 |------------------------|------------|--------------------------------------|
 | `/`                    | GET        | Landing page                         |
 | `/login`               | GET, POST  | User login                           |
-| `/register`            | GET, POST  | User registration                    |
+| `/register`            | GET, POST  | Admin/staff account registration     |
+| `/reg-user`            | GET, POST  | Admin registers parking users        |
 | `/dashboard`           | GET        | Real-time parking dashboard          |
 | `/update-parking`      | POST       | Process RFID scan (time in/out)      |
 | `/parking_logs`        | GET        | View all parking activity logs       |
 | `/users`               | GET        | List registered users                |
+| `/api/users`           | GET        | JSON API for registered users        |
+| `/delete-user/<id>`    | POST       | Delete a registered user             |
+| `/edit-user/<id>`      | POST       | Edit user details                    |
 | `/vehicles_inside`     | GET        | View vehicles currently parked       |
 | `/logout`              | GET        | Clear session and redirect to login  |
 | `/api/parking-status`  | GET        | JSON API for parking availability    |

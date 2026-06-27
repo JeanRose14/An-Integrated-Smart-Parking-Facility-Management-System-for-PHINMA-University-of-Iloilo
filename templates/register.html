@@ -1,132 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <title>Register | PHINMA UI Smart Parking</title>
-
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* HERO */
-.hero {
-  min-height: 64vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 60px 20px;
-}
-
-/* 🔥 IMPROVED BOX (SAME STYLE SA DASHBOARD) */
-.register-card {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  padding: 40px;
-  border-radius: 18px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 25px 55px rgba(0,0,0,0.3);
-}
-
-/* TITLE */
-.register-card h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #004b6b;
-}
-
-/* LABEL */
-.register-card label {
-  font-size: 13px;
-  margin-bottom: 5px;
-  display: block;
-  font-weight: 600;
-}
-
-/* INPUT */
-.register-card input,
-.register-card select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  transition: 0.2s;
-}
-
-.register-card input:focus,
-.register-card select:focus {
-  border-color: #facc15;
-  outline: none;
-}
-
-/* BUTTON */
-.register-card button {
-  width: 100%;
-  padding: 13px;
-  background: linear-gradient(135deg, #ffcc00, #facc15);
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.register-card button:hover {
-  transform: scale(1.03);
-}
-
-/* NAVBAR */
-nav {
-  background-color: #004b6b;
-  padding: 15px 40px;
-  display: flex;
-  justify-content: center;
-}
-
-.logo {
-  color: #fff;
-  font-weight: bold;
-  text-align: center;
-}
-
-/* FOOTER */
-footer {
-  background-color: #002a3b;
-  color: white;
-  text-align: center;
-  padding: 15px 0;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{display:flex;flex-direction:column;min-height:100vh}
+nav{background:#004b6b;padding:15px 40px;display:flex;justify-content:center;align-items:center}
+.logo{color:#fff;font-weight:bold;font-size:18px;text-align:center}
+.hero{flex:1;display:flex;justify-content:center;align-items:center;padding:60px 20px}
+.register-card{background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);padding:40px;border-radius:18px;width:100%;max-width:440px;box-shadow:0 25px 55px rgba(0,0,0,0.3)}
+.register-card h2{text-align:center;margin-bottom:25px;color:#004b6b}
+.register-card label{font-size:13px;margin-bottom:5px;display:block;font-weight:600}
+.register-card input,.register-card select{width:100%;padding:12px;margin-bottom:15px;border-radius:8px;border:1px solid #ccc;transition:0.2s}
+.register-card input:focus,.register-card select:focus{border-color:#facc15;outline:none}
+.register-card button{width:100%;padding:13px;background:linear-gradient(135deg,#ffcc00,#facc15);border:none;border-radius:8px;font-weight:bold;cursor:pointer;transition:0.3s;font-size:15px}
+.register-card button:hover{transform:scale(1.03)}
+.alert{padding:10px;margin-bottom:15px;border-radius:6px;font-size:14px;text-align:center}
+.alert.success{background:#16a34a;color:white}
+.alert.danger{background:#ef4444;color:white}
+.alert.warning{background:#f59e0b;color:white}
+footer{background:#002a3b;color:white;text-align:center;padding:15px 0;margin-top:auto}
 </style>
 </head>
-
 <body>
 
 <nav>
-  <div class="logo">
-    An Integrated Smart Parking Facility Management System for PHINMA University of Iloilo
-  </div>
+<div class="logo">PHINMA UI — Smart Parking System</div>
 </nav>
 
 <header class="hero">
-
 <div class="register-card">
 
-<h2>Create Account</h2>
+<h2>Create Admin / Staff Account</h2>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert {{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 
 <form method="POST" action="{{ url_for('register') }}">
-
 <label>Full Name</label>
 <input type="text" name="full_name" required>
 
 <label>Email</label>
 <input type="email" name="email" required>
+
+<label>Role</label>
+<select name="role" required>
+  <option value="Admin">Admin</option>
+  <option value="Staff">Staff</option>
+</select>
 
 <label>Password</label>
 <input type="password" name="password" required>
@@ -135,7 +63,6 @@ footer {
 <input type="password" name="confirm_password" required>
 
 <button type="submit">Register</button>
-
 </form>
 
 <p style="text-align:center;margin-top:15px;">
@@ -143,11 +70,10 @@ Already have an account? <a href="{{ url_for('login') }}">Login</a>
 </p>
 
 </div>
-
 </header>
 
 <footer>
-<p>© 2026 PHINMA UI Smart Parking System</p>
+<p>&copy; 2026 PHINMA UI Smart Parking System</p>
 </footer>
 
 </body>

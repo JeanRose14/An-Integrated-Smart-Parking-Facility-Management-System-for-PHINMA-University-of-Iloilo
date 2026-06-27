@@ -3,180 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <title>Dashboard | PHINMA UI Smart Parking</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}" />
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      /* HERO */
-      .hero {
-        flex: 1;
-        min-height: 64vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 60px 40px;
-      }
-
-      /* CARD */
-      .dashboard-card {
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(12px);
-        padding: 34px;
-        border-radius: 18px;
-        width: 100%;
-        max-width: 1150px;
-        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.3);
-      }
-
-      /* TOP */
-      .dashboard-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 8px;
-      }
-
-      .subtitle {
-        margin-bottom: 20px;
-        color: #444;
-      }
-
-      /* STATUS */
-      .status-badge {
-        padding: 6px 14px;
-        border-radius: 999px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #fff;
-        background: #16a34a;
-      }
-
-      /* ALERT */
-      .alert-full {
-        display: none;
-        background: #ef4444;
-        color: #fff;
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        font-weight: 600;
-        text-align: center;
-      }
-
-      /* PROGRESS */
-      .occupancy {
-        margin-bottom: 26px;
-      }
-      .progress {
-        height: 12px;
-        background: #e5e7eb;
-        border-radius: 999px;
-        overflow: hidden;
-      }
-      .progress-fill {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
-        transition: width 0.6s ease;
-      }
-
-      /* STATS */
-      .stats-primary,
-      .stats-secondary {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-        margin-bottom: 24px;
-      }
-
-      .stat-box {
-        background: linear-gradient(135deg, #0b4f6c, #0e7490);
-        color: #fff;
-        padding: 24px;
-        border-radius: 14px;
-        text-align: center;
-      }
-
-      .stat-box.small {
-        padding: 18px;
-        background: linear-gradient(135deg, #155e75, #0f766e);
-      }
-
-      /* ACTIONS */
-      .dashboard-actions {
-        display: flex;
-        justify-content: center;
-        gap: 18px;
-        flex-wrap: wrap;
-      }
-
-      .dashboard-actions a {
-        min-width: 230px;
-        text-align: center;
-        background: linear-gradient(135deg, #ffcc00, #facc15);
-        color: #000;
-        padding: 14px 20px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-      }
-
-      /* NAVBAR */
-      nav {
-        background-color: #004b6b;
-        padding: 15px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .logo {
-        font-size: 24px;
-        font-weight: bold;
-        color: #fff;
-      }
-      nav ul {
-        list-style: none;
-        display: flex;
-        gap: 25px;
-      }
-      nav ul li a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: 500;
-      }
-
-      footer {
-        background-color: #002a3b;
-        color: #fff;
-        text-align: center;
-        padding: 15px 0;
-      }
-
-      /* RESPONSIVE */
-      @media (max-width: 900px) {
-        .stats-primary,
-        .stats-secondary {
-          grid-template-columns: 1fr;
-        }
-      }
+      *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+      body{display:flex;flex-direction:column;min-height:100vh}
+      nav{background:#004b6b;padding:15px 40px;display:flex;justify-content:space-between;align-items:center}
+      .logo{font-size:20px;font-weight:bold;color:#fff}
+      nav ul{list-style:none;display:flex;gap:25px}
+      nav ul li a{color:#fff;text-decoration:none;font-weight:500}
+      nav ul li a:hover{color:#ffcc00}
+      .hero{flex:1;min-height:64vh;display:flex;justify-content:center;align-items:center;padding:60px 40px}
+      .dashboard-card{background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);padding:34px;border-radius:18px;width:100%;max-width:1150px;box-shadow:0 25px 55px rgba(0,0,0,0.3)}
+      .dashboard-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:4px}
+      .user-greeting{font-size:13px;color:#0e7490;margin-bottom:16px}
+      .status-badge{padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;color:#fff;background:#16a34a}
+      .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+      .stat-box{background:linear-gradient(135deg,#0b4f6c,#0e7490);color:#fff;padding:24px;border-radius:14px;text-align:center}
+      .stat-box h3{font-size:28px;margin-bottom:4px}
+      .stat-box p{font-size:13px;opacity:0.9}
+      .stat-box.green{background:linear-gradient(135deg,#065f46,#059669)}
+      .stat-box.amber{background:linear-gradient(135deg,#92400e,#d97706)}
+      .stat-box.purple{background:linear-gradient(135deg,#4c1d95,#7c3aed)}
+      .stat-box.small{padding:18px;background:linear-gradient(135deg,#155e75,#0f766e)}
+      .alert-full{display:none;background:#ef4444;color:#fff;padding:10px;border-radius:8px;margin-bottom:16px;font-weight:600;text-align:center}
+      .progress{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-bottom:20px}
+      .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);transition:width 0.6s ease}
+      .section-label{font-weight:600;margin-bottom:8px;margin-top:4px;color:#333}
+      .dashboard-actions{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:20px}
+      .dashboard-actions a{min-width:200px;text-align:center;background:linear-gradient(135deg,#ffcc00,#facc15);color:#000;padding:14px 20px;border-radius:10px;text-decoration:none;font-weight:bold;transition:0.3s}
+      .dashboard-actions a:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(250,204,21,0.4)}
+      footer{background:#002a3b;color:#fff;text-align:center;padding:15px 0;margin-top:auto}
+      @media(max-width:900px){.stats-grid{grid-template-columns:1fr}}
     </style>
   </head>
-
   <body>
     <nav>
-      <div class="logo">Website</div>
+      <div class="logo">PHINMA UI</div>
       <ul>
         <li><a href="{{ url_for('users') }}">Users</a></li>
-        <li><a href="{{ url_for('reg_user') }}">Registration Form</a></li>
+        <li><a href="{{ url_for('reg_user') }}">Register</a></li>
+        <li><a href="{{ url_for('parking_logs') }}">Logs</a></li>
         <li><a href="{{ url_for('logout') }}">Logout</a></li>
       </ul>
     </nav>
@@ -184,29 +50,24 @@
     <header class="hero">
       <div class="dashboard-card">
         <div class="dashboard-top">
-          <h2>Welcome, {{ user_name or 'Admin' }} 👋</h2>
+          <h2>Dashboard</h2>
           <div class="status-badge" id="systemStatus">System Active</div>
         </div>
+        <div class="user-greeting">Welcome, <strong>{{ session.get('user_name', 'Admin') }}</strong> ({{ session.get('user_role', 'User') }})</div>
 
-        <p class="subtitle">Real-time parking monitoring panel.</p>
+        <div class="alert-full" id="fullAlert">Parking is FULL</div>
 
-        <div class="alert-full" id="fullAlert">🚨 Parking is FULL</div>
-
-        <div class="occupancy">
-          <div style="font-weight: 600; margin-bottom: 6px">
-            Parking Occupancy
-          </div>
-          <div class="progress">
-            <div class="progress-fill" id="progressFill"></div>
-          </div>
+        <div class="section-label">Parking Occupancy</div>
+        <div class="progress">
+          <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <div class="stats-primary">
-          <div class="stat-box">
+        <div class="stats-grid">
+          <div class="stat-box green">
             <h3 id="availableSlots">{{ available }}</h3>
             <p>Available Slots</p>
           </div>
-          <div class="stat-box">
+          <div class="stat-box amber">
             <h3 id="occupiedSlots">{{ occupied }}</h3>
             <p>Occupied Slots</p>
           </div>
@@ -216,83 +77,63 @@
           </div>
         </div>
 
-        <div class="stats-secondary">
-          <div class="stat-box small">
+        <div class="stats-grid">
+          <div class="stat-box purple">
+            <h3>{{ total_users }}</h3>
+            <p>Registered Users</p>
+          </div>
+          <div class="stat-box green small">
             <h3 id="timeIn">{{ last_scan_in }}</h3>
             <p>Last Scan In</p>
           </div>
-          <div class="stat-box small">
+          <div class="stat-box amber small">
             <h3 id="timeOut">{{ last_scan_out }}</h3>
             <p>Last Scan Out</p>
-          </div>
-          <div class="stat-box small">
-            <h3 id="liveClock">--:--:--</h3>
-            <p>Current Time</p>
           </div>
         </div>
 
         <div class="dashboard-actions">
-          <a href="{{ url_for('parking_logs') }}">View Parking Logs</a>
+          <a href="{{ url_for('parking_logs') }}">View Logs</a>
+          <a href="{{ url_for('reg_user') }}">Register User</a>
+          <a href="{{ url_for('vehicles_inside') }}">Vehicles Inside</a>
         </div>
       </div>
     </header>
 
     <footer>
-      <p>© 2026 PHINMA UI Smart Parking System</p>
+      <p>&copy; 2026 PHINMA UI Smart Parking System</p>
     </footer>
 
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-
     <script>
       const socket = io("http://127.0.0.1:5000");
-
-      socket.on("connect", () => {
-        console.log("WebSocket connected");
-      });
 
       socket.on("parking_update", (data) => {
         document.getElementById("availableSlots").innerText = data.available;
         document.getElementById("occupiedSlots").innerText = data.occupied;
         document.getElementById("totalSlots").innerText = data.total;
 
-        // 🔥 INSERT HERE
         if (data.type === "IN") {
           document.getElementById("timeIn").innerText = data.scan_time;
         } else {
           document.getElementById("timeOut").innerText = data.scan_time;
         }
-        const percent = (data.occupied / data.total) * 100;
-        document.getElementById("progressFill").style.width = percent + "%";
 
-        if (data.available <= 0) {
-          document.getElementById("fullAlert").style.display = "block";
-          document.getElementById("systemStatus").style.background = "#ef4444";
-          document.getElementById("systemStatus").innerText = "FULL";
-        } else {
-          document.getElementById("fullAlert").style.display = "none";
-          document.getElementById("systemStatus").style.background = "#16a34a";
-          document.getElementById("systemStatus").innerText = "System Active";
-        }
+        const pct = (data.occupied / data.total) * 100;
+        document.getElementById("progressFill").style.width = pct + "%";
+
+        const full = data.available <= 0;
+        document.getElementById("fullAlert").style.display = full ? "block" : "none";
+        document.getElementById("systemStatus").style.background = full ? "#ef4444" : "#16a34a";
+        document.getElementById("systemStatus").innerText = full ? "FULL" : "System Active";
       });
 
-      function updateClock() {
-        const now = new Date();
-        document.getElementById("liveClock").innerText =
-          now.toLocaleTimeString();
-      }
-
-      setInterval(updateClock, 1000);
-      updateClock();
-
-      // Set initial progress bar and alert state on page load
       (function () {
-        const occupied = Number("{{ occupied }}") || 0;
-        const total = Number("{{ total }}") || 1;
-        const available = Number("{{ available }}") || 0;
-        const percent = (occupied / total) * 100;
-        document.getElementById("progressFill").style.width = percent + "%";
-
-        if (available <= 0) {
+        const o = Number("{{ occupied }}") || 0;
+        const t = Number("{{ total }}") || 1;
+        const a = Number("{{ available }}") || 0;
+        document.getElementById("progressFill").style.width = (o / t) * 100 + "%";
+        if (a <= 0) {
           document.getElementById("fullAlert").style.display = "block";
           document.getElementById("systemStatus").style.background = "#ef4444";
           document.getElementById("systemStatus").innerText = "FULL";

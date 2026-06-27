@@ -1,190 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <title>Login | PHINMA UI Smart Parking</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-display:flex;
-flex-direction:column;
-min-height:100vh;
-}
-
-/* NAVBAR */
-nav{
-background:#004b6b;
-padding:15px 40px;
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-.logo{
-font-size:24px;
-font-weight:bold;
-color:#fff;
-}
-
-nav ul{
-list-style:none;
-display:flex;
-gap:25px;
-}
-
-nav ul li a{
-color:white;
-text-decoration:none;
-font-weight:500;
-}
-
-nav ul li a:hover{
-color:#ffcc00;
-}
-
-/* HERO */
-.hero{
-flex:1;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:60px 40px;
-}
-
-/* LOGIN CARD */
-.login-card{
-background:rgba(255,255,255,0.95);
-padding:35px;
-border-radius:12px;
-width:100%;
-max-width:400px;
-box-shadow:0 8px 25px rgba(0,0,0,0.25);
-}
-
-.login-card h2{
-text-align:center;
-margin-bottom:20px;
-color:#004b6b;
-}
-
-/* FORM */
-.login-card label{
-font-size:14px;
-display:block;
-margin-bottom:5px;
-font-weight:bold;
-}
-
-.login-card input{
-width:100%;
-padding:10px;
-margin-bottom:15px;
-border-radius:6px;
-border:1px solid #ccc;
-}
-
-/* BUTTON */
-.login-card button{
-width:100%;
-background:#ffcc00;
-color:black;
-padding:10px;
-border:none;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.login-card button:hover{
-background:#e6b800;
-}
-
-/* REGISTER LINK */
-.login-card p{
-text-align:center;
-margin-top:15px;
-font-size:14px;
-}
-
-.login-card a{
-color:#004b6b;
-text-decoration:none;
-font-weight:bold;
-}
-
-/* FLASH MESSAGE */
-.alert{
-padding:10px;
-margin-bottom:15px;
-border-radius:6px;
-font-size:14px;
-text-align:center;
-opacity:1;
-transition:opacity 0.5s ease;
-}
-
-.alert.success{
-background:#16a34a;
-color:white;
-}
-
-.alert.danger{
-background:#ef4444;
-color:white;
-}
-
-.alert.warning{
-background:#f59e0b;
-color:white;
-}
-
-/* FOOTER */
-footer{
-background:#002a3b;
-color:white;
-text-align:center;
-padding:15px 0;
-margin-top:auto;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{display:flex;flex-direction:column;min-height:100vh}
+nav{background:#004b6b;padding:15px 40px;display:flex;justify-content:center;align-items:center}
+.logo{color:#fff;font-weight:bold;font-size:18px;text-align:center}
+.hero{flex:1;display:flex;justify-content:center;align-items:center;padding:60px 40px}
+.login-card{background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);padding:40px;border-radius:18px;width:100%;max-width:420px;box-shadow:0 25px 55px rgba(0,0,0,0.3)}
+.login-card h2{text-align:center;margin-bottom:25px;color:#004b6b}
+.login-card label{font-size:13px;display:block;margin-bottom:5px;font-weight:600}
+.login-card input{width:100%;padding:12px;margin-bottom:15px;border-radius:8px;border:1px solid #ccc;transition:0.2s}
+.login-card input:focus{border-color:#facc15;outline:none}
+.login-card button{width:100%;padding:13px;background:linear-gradient(135deg,#ffcc00,#facc15);border:none;border-radius:8px;font-weight:bold;cursor:pointer;transition:0.3s;font-size:15px}
+.login-card button:hover{transform:scale(1.03)}
+.alert{padding:10px;margin-bottom:15px;border-radius:6px;font-size:14px;text-align:center;transition:opacity 0.5s ease}
+.alert.success{background:#16a34a;color:white}
+.alert.danger{background:#ef4444;color:white}
+.alert.warning{background:#f59e0b;color:white}
+.alert.info{background:#0ea5e9;color:white}
+.login-card p{text-align:center;margin-top:15px;font-size:14px}
+.login-card a{color:#004b6b;font-weight:bold}
+footer{background:#002a3b;color:white;text-align:center;padding:15px 0;margin-top:auto}
 </style>
 </head>
-
 <body>
 
-<!-- NAVIGATION -->
 <nav>
-<div class="logo">An Integrated Smart Parking Facility Management System for PHINMA University of Iloilo</div>
+<div class="logo">PHINMA UI — Smart Parking System</div>
 </nav>
 
-<!-- LOGIN -->
 <header class="hero">
 <div class="login-card">
 
 <h2>Login</h2>
 
-<!-- FLASH MESSAGE -->
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
 {% for category, message in messages %}
-<div class="alert {{ category }}" id="flashMessage">
-{{ message }}
-</div>
+<div class="alert {{ category }}">{{ message }}</div>
 {% endfor %}
 {% endif %}
 {% endwith %}
 
 <form method="POST" action="{{ url_for('login') }}">
-
 <label>Email Address</label>
 <input type="email" name="email" placeholder="Enter your email" required>
 
@@ -192,38 +54,24 @@ margin-top:auto;
 <input type="password" name="password" placeholder="Enter your password" required>
 
 <button type="submit">Login</button>
-
 </form>
 
-<p>Don’t have an account? 
-<a href="{{ url_for('register') }}">Register here</a>
-</p>
+<p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
 
 </div>
 </header>
 
 <footer>
-<p>© 2026 PHINMA UI Smart Parking System</p>
+<p>&copy; 2026 PHINMA UI Smart Parking System</p>
 </footer>
 
 <script>
-
-/* AUTO HIDE FLASH MESSAGE AFTER 3 SECONDS */
-
 setTimeout(function(){
-
-let flash = document.getElementById("flashMessage");
-
-if(flash){
-flash.style.opacity="0";
-
-setTimeout(function(){
-flash.style.display="none";
-},500);
-}
-
-},3000);
-
+  document.querySelectorAll('.alert').forEach(function(el){
+    el.style.opacity = '0';
+    setTimeout(function(){ el.style.display = 'none'; }, 500);
+  });
+}, 3000);
 </script>
 
 </body>

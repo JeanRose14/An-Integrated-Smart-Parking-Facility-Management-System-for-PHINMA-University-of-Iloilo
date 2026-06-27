@@ -3,153 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <title>Users | PHINMA UI Smart Parking</title>
-
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-/* HERO */
-.hero{
-flex:1;
-min-height:64vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:60px 40px;
-}
-
-/* CARD */
-.dashboard-card{
-background:rgba(255,255,255,.92);
-backdrop-filter:blur(12px);
-padding:34px;
-border-radius:18px;
-width:100%;
-max-width:1150px;
-box-shadow:0 25px 55px rgba(0,0,0,.30);
-}
-
-/* NAVBAR */
-nav{
-background-color:#004b6b;
-padding:15px 40px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.logo{
-font-size:24px;
-font-weight:bold;
-color:#fff;
-}
-
-nav ul{
-list-style:none;
-display:flex;
-gap:25px;
-}
-
-nav ul li a{
-color:#fff;
-text-decoration:none;
-font-weight:500;
-}
-
-/* SEARCH */
-.search-box{
-margin-bottom:15px;
-}
-
-.search-box input{
-padding:8px;
-width:250px;
-border-radius:6px;
-border:1px solid #ccc;
-}
-
-/* TABLE */
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th,td{
-padding:12px;
-border-bottom:1px solid #ddd;
-text-align:center;
-}
-
-th{
-background:#0e7490;
-color:white;
-}
-
-/* BUTTONS */
-button{
-padding:6px 10px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin:2px;
-}
-
-.edit{background:#22c55e;color:white;}
-.delete{background:#ef4444;color:white;}
-
-/* FOOTER */
-footer{
-background-color:#002a3b;
-color:#fff;
-text-align:center;
-padding:15px 0;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{display:flex;flex-direction:column;min-height:100vh}
+nav{background:#004b6b;padding:15px 40px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:20px;font-weight:bold;color:#fff}
+nav ul{list-style:none;display:flex;gap:25px}
+nav ul li a{color:#fff;text-decoration:none;font-weight:500}
+.hero{flex:1;min-height:64vh;display:flex;justify-content:center;align-items:center;padding:60px 40px}
+.dashboard-card{background:rgba(255,255,255,.92);backdrop-filter:blur(12px);padding:34px;border-radius:18px;width:100%;max-width:1200px;box-shadow:0 25px 55px rgba(0,0,0,.30)}
+h2{margin-bottom:15px;color:#004b6b}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;flex-wrap:wrap;gap:10px}
+.search-box input{padding:10px 14px;width:280px;border-radius:8px;border:1px solid #ccc;font-size:14px}
+.search-box input:focus{outline:none;border-color:#facc15}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:12px;border-bottom:1px solid #ddd;text-align:center}
+th{background:#0e7490;color:white;position:sticky;top:0}
+tr:hover{background:rgba(14,116,144,0.05)}
+td[contenteditable="true"]:focus{outline:2px solid #facc15;outline-offset:-2px;background:#fffbe6;border-radius:4px}
+button{padding:7px 14px;border:none;border-radius:6px;cursor:pointer;margin:2px;font-weight:600;font-size:12px;transition:0.2s}
+.edit{background:#22c55e;color:white}
+.edit:hover{background:#16a34a}
+.delete{background:#ef4444;color:white}
+.delete:hover{background:#dc2626}
+footer{background:#002a3b;color:#fff;text-align:center;padding:15px 0;margin-top:auto}
 </style>
 </head>
-
 <body>
 
 <nav>
-<div class="logo">Website</div>
+<div class="logo">PHINMA UI</div>
 <ul>
 <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-<li><a href="{{ url_for('users') }}">Users</a></li>
-<li><a href="{{ url_for('reg_user') }}">Registration Form</a></li>
+<li><a href="{{ url_for('reg_user') }}">Register</a></li>
 <li><a href="{{ url_for('logout') }}">Logout</a></li>
 </ul>
 </nav>
 
 <header class="hero">
-
 <div class="dashboard-card">
 
-<h2 style="margin-bottom:15px;">Registered Users</h2>
-
-<div class="search-box">
-<input type="text" id="search" placeholder="Search user...">
+<div class="toolbar">
+  <h2>Registered Users</h2>
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search name, email, RFID, or plate...">
+  </div>
 </div>
 
 <table id="table">
+<thead>
 <tr>
-<th>Name</th>
-<th>Email</th>
-<th>RFID</th>
-<th>Plate</th>
-<th>Action</th>
+  <th>Name</th>
+  <th>Email</th>
+  <th>RFID</th>
+  <th>Plate</th>
+  <th>Role</th>
+  <th>Registered</th>
+  <th>Expires</th>
+  <th>Action</th>
 </tr>
+</thead>
+<tbody></tbody>
 </table>
 
 </div>
-
 </header>
 
 <footer>
-<p>© 2026 PHINMA UI Smart Parking System</p>
+<p>&copy; 2026 PHINMA UI Smart Parking System</p>
 </footer>
 
 <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-
 <script>
 const socket = io();
 
@@ -157,79 +82,70 @@ function loadUsers() {
   fetch("/api/users")
     .then(res => res.json())
     .then(data => {
-
-      const table = document.getElementById("table");
-
-      table.innerHTML = `
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>RFID</th>
-          <th>Plate</th>
-          <th>Action</th>
-        </tr>
-      `;
+      const tbody = document.querySelector("#table tbody");
+      tbody.innerHTML = "";
 
       data.forEach(u => {
         const row = document.createElement("tr");
-
         row.innerHTML = `
           <td contenteditable="true">${u.name}</td>
           <td contenteditable="true">${u.email}</td>
           <td contenteditable="true">${u.rfid}</td>
           <td contenteditable="true">${u.plate}</td>
           <td>
+            <select onchange="saveUser(this, ${u.id})" style="padding:4px 8px;border-radius:6px;border:1px solid #ccc">
+              <option value="Student" ${u.role === 'Student' ? 'selected' : ''}>Student</option>
+              <option value="Faculty" ${u.role === 'Faculty' ? 'selected' : ''}>Faculty</option>
+              <option value="Staff" ${u.role === 'Staff' ? 'selected' : ''}>Staff</option>
+              <option value="Admin" ${u.role === 'Admin' ? 'selected' : ''}>Admin</option>
+            </select>
+          </td>
+          <td style="font-size:12px">${u.registered}</td>
+          <td style="font-size:12px">${u.expires}</td>
+          <td>
             <button class="edit" onclick="saveUser(this, ${u.id})">Save</button>
             <button class="delete" onclick="deleteUser(${u.id})">Delete</button>
           </td>
         `;
-
-        table.appendChild(row);
+        tbody.appendChild(row);
       });
-
     });
 }
 
-socket.on("users_update", () => {
-  loadUsers();
-});
-
+socket.on("users_update", () => loadUsers());
 loadUsers();
 
-// 🔍 SEARCH
 document.getElementById("search").addEventListener("keyup", function() {
-  let filter = this.value.toLowerCase();
-  let rows = document.querySelectorAll("#table tr");
-
-  rows.forEach((row, i) => {
-    if (i === 0) return;
-    row.style.display = row.innerText.toLowerCase().includes(filter)
-      ? "" : "none";
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll("#table tbody tr").forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(filter) ? "" : "none";
   });
 });
 
-// DELETE
 function deleteUser(id) {
-  if (!confirm("Delete user?")) return;
+  if (!confirm("Delete this user?")) return;
   fetch(`/delete-user/${id}`, { method: "POST" });
 }
 
-// SAVE
 function saveUser(btn, id) {
-  const row = btn.parentElement.parentElement;
+  const row = btn.closest("tr");
   const cells = row.querySelectorAll("td");
-
-  const data = {
-    name: cells[0].innerText,
-    email: cells[1].innerText,
-    rfid: cells[2].innerText,
-    plate: cells[3].innerText
-  };
+  const roleSelect = row.querySelector("select");
 
   fetch(`/edit-user/${id}`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(data)
+    body: JSON.stringify({
+      name: cells[0].innerText,
+      email: cells[1].innerText,
+      rfid: cells[2].innerText,
+      plate: cells[3].innerText,
+      role: roleSelect ? roleSelect.value : "Student"
+    })
+  }).then(() => {
+    btn.style.background = "#16a34a";
+    btn.innerText = "Saved!";
+    setTimeout(() => { btn.style.background = "#22c55e"; btn.innerText = "Save"; }, 1500);
   });
 }
 </script>
